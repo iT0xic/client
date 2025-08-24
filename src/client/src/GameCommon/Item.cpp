@@ -405,10 +405,10 @@ void       CItem::GetToolTip(CInfo& ToolTip, DWORD dwDialogType, DWORD dwType) {
                               CStringManager::GetSingleton().GetAbility( AT_HIT )
       );
 
-      if ( sItem.GetGrade() <= 0 )
-        strTemp.append( CStr::Printf( "%d", sItem.GetHitRate() ) );
-      else
-        strTemp.append( CStr::Printf( "%d", sItem.GetHitRate() + ITEMGRADE_HIT( sItem.GetGrade() ) ) );
+      //if ( sItem.GetGrade() <= 0 )
+      strTemp.append( CStr::Printf( "%d", sItem.GetHitRate() ) );
+      //else
+        //strTemp.append( CStr::Printf( "%d", sItem.GetHitRate() + ITEMGRADE_HIT( sItem.GetGrade() ) ) );
 
       ToolTip.AddString( strTemp.c_str() );
 
@@ -1259,7 +1259,6 @@ void  CItem::AddItemLifeDuration(tagITEM& sItem, CInfo& Info) {
   } else {
     pszLife = STR_FUEL;
   }
-
   Info.AddString( CStr::Printf( "%s:%3d%%   %s:%3d", pszLife, iLife, STR_DURABILITY, sItem.GetDurability() ) );
 
 }

@@ -86,7 +86,7 @@ void tagBaseITEM::Init(int iItem, unsigned int uiQuantity) {
     this->m_uiQuantity = uiQuantity;
   } else {
     this->m_nLife       = MAX_ITEM_LIFE; // 기본 수명은 1000으로 ..
-    this->m_cDurability = ITEM_DURABITY( this->m_cType, this->m_nItemNo );
+    this->m_cDurability = ITEM_DURABITY( this->m_cType, this->m_nItemNo ); // ??
   }
 }
 
@@ -376,7 +376,6 @@ t_eSHOT tagBaseITEM::GetNaturalBulletType(int iItemNo) {
 int tagBaseITEM::GetHitRate() {
   if ( m_cType != ITEM_TYPE_WEAPON )
     return 0;
-
   return (int)(((float)ITEM_QUALITY( m_cType, m_nItemNo ) * 0.6) + ((float)m_cDurability * 0.8) - 15.0f);
 }
 

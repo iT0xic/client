@@ -255,12 +255,12 @@ int lua_CallIntFUNC(lua_State* pLUA, const char* szFuncName, ...) {
     // ���ϵ� ����� �����Ƿ� ��� ���� ���´�.
     lua_GetRETURN( pLUA, iResultCnt );
 
-    LogString (LOG_DEBUG, "lua function( %s ) return %d ... \n", szFuncName, iResultCnt);
+    //LogString (LOG_DEBUG, "lua function( %s ) return %d ... \n", szFuncName, iResultCnt);
 
     return iResultCnt;
   }
 
-  LogString (LOG_DEBUG, "lua function( %s ) return %d result ... \n", szFuncName, iResultCnt);
+  //LogString (LOG_DEBUG, "lua function( %s ) return %d result ... \n", szFuncName, iResultCnt);
 
   return 0x80000000;
 }

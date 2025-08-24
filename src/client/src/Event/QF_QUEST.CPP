@@ -11,7 +11,7 @@
 //-------------------------------------------------------------------------------------------------
 /// 퀘스트 트리거 조건을 체크한다... AddCODE: by icarus
 int QF_checkQuestCondition(ZSTRING szQuestTriggerName) {
-  LogString (LOG_DEBUG, "GF_checkQuestCondition( %s ) \n", szQuestTriggerName);
+  //LogString (LOG_DEBUG, "GF_checkQuestCondition( %s ) \n", szQuestTriggerName);
 
   //--------------------------------------------------------------------------------
   LOGOUT( " " );

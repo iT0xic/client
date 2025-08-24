@@ -1966,11 +1966,11 @@ struct gsv_ITEM_RESULT_REPORT : public t_PACKETHEADER {
 };
 
 //---------------------------------------------------------
-#define	CRAFT_GEMMING_REQ			0x01			// 재밍
-#define CRAFT_BREAKUP_USE_SKILL		0x02			// 스킬로 분해
-#define CRAFT_BREAKUP_FROM_NPC		0x03			// npc 통해 분해
-#define	CRAFT_UPGRADE_USE_SKILL		0x04			// 스킬로 재련
-#define	CRAFT_UPGRADE_FROM_NPC		0x05			// npc 통해 재련
+#define	CRAFT_GEMMING_REQ			0x00			// 재밍
+#define CRAFT_BREAKUP_USE_SKILL		0x01			// 스킬로 분해
+#define CRAFT_BREAKUP_FROM_NPC		0x02			// npc 통해 분해
+#define	CRAFT_UPGRADE_USE_SKILL		0x03			// 스킬로 재련
+#define	CRAFT_UPGRADE_FROM_NPC		0x04			// npc 통해 재련
 
 struct cli_CRAFT_ITEM_REQ : public t_PACKETHEADER {
   uint8_t m_btTYPE;
@@ -1982,7 +1982,7 @@ struct cli_CRAFT_GEMMING_REQ : public cli_CRAFT_ITEM_REQ {
 };
 
 struct cli_CRAFT_BREAKUP_REQ : public cli_CRAFT_ITEM_REQ {
-  int16_t m_nSkillSLOTorNpcIDX; // 사용 스킬슬롯 번호또는 npc번호
+  int16_t m_nSkillSLOTorNpcIDX; // 사용 스킬슬롯 번호또는 npc번호 //changed by t0xic from int16_t to int8_t
   uint8_t m_btTargetInvIDX;     // 분리할 아이템 인벤 번호
 };
 
@@ -2010,7 +2010,7 @@ struct cli_CRAFT_UPGRADE_REQ : public cli_CRAFT_ITEM_REQ {
 
 struct gsv_CRAFT_ITEM_REPLY : public t_PACKETHEADER {
   uint8_t         m_btRESULT;
-  uint8_t         m_btOutCNT;      // 변경된 아이템 갯수
+  //uint8_t         m_btOutCNT;      // 변경된 아이템 갯수 // CHANGED BY IT0XIC DANGEROUS
   tag_SET_INVITEM m_sInvITEM[ 0 ]; // 변경된 갯수 만큼 들어 있다... 
   // 예외) CRAFT_UPGRADE_SUCCESS, CRAFT_UPGRADE_FAILED 일경우
   // m_sInvITEM[ m_btOutCNT-1 ].m_iQuantity에 성공도 계산된값이 들어있음

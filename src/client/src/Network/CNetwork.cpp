@@ -126,8 +126,9 @@ void              CNetwork::Proc_WorldPacket() {
   CshoClientSOCK* pSocket = &this->m_WorldSOCKET;
 
   std::unique_ptr<t_PACKET> packet(new t_PACKET);
-  while ( m_WorldSOCKET.Peek_Packet( packet.get(), true ) ) {
-    switch ( packet->m_HEADER.m_wType ) {
+  while (m_WorldSOCKET.Peek_Packet(packet.get(), true)) {
+      switch (packet->m_HEADER.m_wType) {
+          //LogString(LOG_DEBUG, "Recv packet type: 0x%x \n", packet->m_HEADER.m_wType); print here added by t0xic
       case to_underlying(ePacketType::PAKSS_ACCEPT_REPLY): {
         switch ( packet->m_NetSTATUS.m_btStatus ) {
           case NETWORK_STATUS_ACCEPTED: {
@@ -589,7 +590,7 @@ void CNetwork::Proc_ZonePacket(t_PACKET* packet) {
     case to_underlying(ePacketType::PAKWC_UPDATE_NAME): Recv_gsv_UPDATE_NAME(packet);
       break;
 
-    case to_underlying(ePacketType::PAKCC_CHAN_CHAR_REPLY): { //Fixed by Davidixx
+    case to_underlying(ePacketType::PAKCC_CHAN_CHAR_REPLY): {
         using RoseCommon::Packet::SrvChanCharReply;
         Recv_wsv_CHAR_CHANGE(SrvChanCharReply::create(reinterpret_cast<const uint8_t*>(packet)));
         m_btZoneSocketSTATUS = 0;
