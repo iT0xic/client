@@ -3334,9 +3334,6 @@ void CObjCHAR::Stop_Cart(void) {
 //--------------------------------------------------------------------------------
 
 bool CObjCHAR::CanApplyCommand() {
-  /// 캐스팅이 시작되었다면 적용할수 없음..
-  /// 또 result_of_skill 을 받았다면.. 결국 현재 시전할 스킬이 끝나기 전에는 모든 명령을 큐에넣는다.
-  /// 이미 서버에선 결과가 적용된거기때문에 클라이언트도 무조건 스킬을 시전해야된다.
   if ( this->m_bCastingSTART && bCanActionActiveSkill() ) {
     return false;
   }

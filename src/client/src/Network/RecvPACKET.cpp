@@ -544,7 +544,7 @@ void CRecvPACKET::Recv_gsv_JOIN_ZONE(t_PACKET* packet) {
   g_pAVATAR->Set_HP( packet->m_gsv_JOIN_ZONE.m_nCurHP );
   g_pAVATAR->Set_MP( packet->m_gsv_JOIN_ZONE.m_nCurMP );
   g_pAVATAR->m_GrowAbility.m_lPenalEXP =
-    packet->m_gsv_JOIN_ZONE.m_lPenalEXP;
+    packet->m_gsv_JOIN_ZONE.m_lPenalEXP; // needs to be changed from uint32 to uint64, added by it0xic
 
   /// 회복을 위한 시간 리셋..
   g_pAVATAR->ClearTimer();
@@ -735,7 +735,7 @@ void     CRecvPACKET::Recv_gsv_INVENTORY_DATA(t_PACKET* packet) {
   memcpy( &refGame.m_SelectedAvataINV.m_INV.m_ItemLIST,
           &packet->m_gsv_INVENTORY_DATA.m_INV.m_ItemLIST,
           sizeof(packet->m_gsv_INVENTORY_DATA.m_INV.m_ItemLIST) );
-}
+  }
 
 //-------------------------------------------------------------------------------------------------
 void     CRecvPACKET::Recv_gsv_QUEST_DATA(t_PACKET* packet) {
@@ -793,6 +793,7 @@ void        CRecvPACKET::Recv_gsv_SET_MOTION(RoseCommon::Packet::SrvSetAnimation
 void        CRecvPACKET::Recv_gsv_TOGGLE(t_PACKET* packet) {
   CObjCHAR* pCHAR = g_pObjMGR->Get_ClientCharOBJ(
     packet->m_gsv_TOGGLE.m_wObjectIDX, false );
+  LogString(LOG_DEBUG, "MoveType is %d\n", packet->m_gsv_TOGGLE.m_btTYPE); //ADDED BY T0XIC
   if ( pCHAR ) {
     pCHAR->SetCMD_TOGGLE( packet->m_gsv_TOGGLE.m_btTYPE );
 
@@ -2105,13 +2106,13 @@ void CRecvPACKET::Recv_gsv_SET_INV_ONLY(t_PACKET* packet) {
   _ASSERT(packet->m_HEADER.m_nSize ==
     sizeof(gsv_SET_INV_ONLY) +
     sizeof(tag_SET_INVITEM) *
-    packet->m_gsv_SET_INV_ONLY.m_btItemCNT);
+    packet->m_gsv_SET_INV_ONLY.m_btItemCNT); // SRV_SET_ITEM it0xic
 
   if ( g_pAVATAR ) {
     g_pAVATAR->SetWaitUpdateInventory( true );
     for ( short nI = 0; nI < packet->m_gsv_SET_INV_ONLY.m_btItemCNT;
           nI++ ) {
-      g_pAVATAR->Set_ITEM(
+      g_pAVATAR->Set_ITEM( // good debug breakpoint it0xi
         packet->m_gsv_SET_INV_ONLY.m_sInvITEM[nI].m_btInvIDX,
         packet->m_gsv_SET_INV_ONLY.m_sInvITEM[nI].m_ITEM );
     }
@@ -4436,16 +4437,13 @@ void CRecvPACKET::Recv_gsv_CRAFT_ITEM_REPLY(t_PACKET* packet) {
   //CRAFT_UPGRADE_FAILED 일경우
   //									// m_sInvITEM[ m_btOutCNT-1
   //].m_uiQuantity에 성공도 계산된값이 들어있음 } ;
-
   switch ( packet->m_gsv_CRAFT_ITEM_REPLY.m_btRESULT ) {
     case CRAFT_GEMMING_SUCCESS: //	0x01
     {
-
       g_pAVATAR->SetWaitUpdateInventory( true );
-      for ( int i        = 0; i < packet->m_gsv_CRAFT_ITEM_REPLY.m_btOutCNT; i++ ) {
+      for ( int i        = 0; i < 2 /* packet->m_gsv_CRAFT_ITEM_REPLY.m_btOutCNT */; i++) {
         int     iPartIdx = CInventory::GetBodyPartByEquipSlot(
           packet->m_gsv_CRAFT_ITEM_REPLY.m_sInvITEM[i].m_btInvIDX );
-
         if ( g_pAVATAR ) {
           g_pAVATAR->SetPartITEM(
             iPartIdx,
@@ -4460,8 +4458,9 @@ void CRecvPACKET::Recv_gsv_CRAFT_ITEM_REPLY(t_PACKET* packet) {
       }
       g_pAVATAR->SetWaitUpdateInventory( false );
       g_pAVATAR->UpdateInventory();
-
       g_itMGR.AppendChatMsg( STR_GEMMING_SUCCESS, IT_MGR::CHAT_TYPE_SYSTEM );
+      //it0xic make success animatrion
+      SE_SuccessSeparate(g_pAVATAR->Get_INDEX());
     }
     break;
     case CRAFT_GEMMING_NEED_SOCKET: //	0x02	// 소켓없다.
@@ -4470,13 +4469,16 @@ void CRecvPACKET::Recv_gsv_CRAFT_ITEM_REPLY(t_PACKET* packet) {
     }
     break;
     case CRAFT_GEMMING_USED_SOCKET: //	0x03	// 재밍된 경우등....
+    {
+        //
+    }
       break;
 
     case CRAFT_BREAKUP_SUCCESS_GEM: //	0x04	// 보석 분리 성공
     {
       if ( g_pAVATAR ) {
         g_pAVATAR->SetWaitUpdateInventory( true );
-        for ( int i = 0; i < packet->m_gsv_CRAFT_ITEM_REPLY.m_btOutCNT;
+        for ( int i = 0; i < 2 /* packet->m_gsv_CRAFT_ITEM_REPLY.m_btOutCNT */;
               i++ ) {
           g_pAVATAR->Set_ITEM(
             packet->m_gsv_CRAFT_ITEM_REPLY.m_sInvITEM[i].m_btInvIDX,
@@ -4506,7 +4508,7 @@ void CRecvPACKET::Recv_gsv_CRAFT_ITEM_REPLY(t_PACKET* packet) {
     {
       if ( g_pAVATAR ) {
         g_pAVATAR->SetWaitUpdateInventory( true );
-        for ( int i = 0; i < packet->m_gsv_CRAFT_ITEM_REPLY.m_btOutCNT;
+        for ( int i = 0; i < 2 /* packet->m_gsv_CRAFT_ITEM_REPLY.m_btOutCNT */;
               i++ ) {
           g_pAVATAR->Set_ITEM(
             packet->m_gsv_CRAFT_ITEM_REPLY.m_sInvITEM[i].m_btInvIDX,
@@ -4534,7 +4536,7 @@ void CRecvPACKET::Recv_gsv_CRAFT_ITEM_REPLY(t_PACKET* packet) {
     {
       if ( g_pAVATAR ) {
         g_pAVATAR->SetWaitUpdateInventory( true );
-        for ( int i = 0; i < packet->m_gsv_CRAFT_ITEM_REPLY.m_btOutCNT;
+        for ( int i = 0; i < 2 /* packet->m_gsv_CRAFT_ITEM_REPLY.m_btOutCNT */;
               i++ ) {
           g_pAVATAR->Set_ITEM(
             packet->m_gsv_CRAFT_ITEM_REPLY.m_sInvITEM[i].m_btInvIDX,
@@ -4580,7 +4582,7 @@ void CRecvPACKET::Recv_gsv_CRAFT_ITEM_REPLY(t_PACKET* packet) {
         CIconItem* pItemIcon = nullptr;
 
         g_pAVATAR->SetWaitUpdateInventory( true );
-        for ( int i = 0; i < packet->m_gsv_CRAFT_ITEM_REPLY.m_btOutCNT;
+        for ( int i = 0; i < 2 /* packet->m_gsv_CRAFT_ITEM_REPLY.m_btOutCNT */;
               i++ ) {
           pItem = &packet->m_gsv_CRAFT_ITEM_REPLY.m_sInvITEM[i].m_ITEM;
           if ( !pItem->IsEmpty() ) {
@@ -4625,14 +4627,14 @@ void CRecvPACKET::Recv_gsv_CRAFT_ITEM_REPLY(t_PACKET* packet) {
         CUpgrade& Upgrade = CUpgrade::GetInstance();
         Upgrade.ClearResultItemSet();
 
-        for ( int i = 0; i < packet->m_gsv_CRAFT_ITEM_REPLY.m_btOutCNT - 1;
+        for ( int i = 0; i < 2 /* packet->m_gsv_CRAFT_ITEM_REPLY.m_btOutCNT */ - 1;
               i++ )
           Upgrade.AddResultItemSet(
             packet->m_gsv_CRAFT_ITEM_REPLY.m_sInvITEM[i] );
 
         Upgrade.SetResultSuccessProb(
           packet->m_gsv_CRAFT_ITEM_REPLY
-                       .m_sInvITEM[packet->m_gsv_CRAFT_ITEM_REPLY.m_btOutCNT - 1]
+                       .m_sInvITEM[2 /* packet->m_gsv_CRAFT_ITEM_REPLY.m_btOutCNT */ - 1]
           .m_ITEM.m_uiQuantity );
         Upgrade.SetResult( packet->m_gsv_CRAFT_ITEM_REPLY.m_btRESULT );
 
@@ -4652,14 +4654,14 @@ void CRecvPACKET::Recv_gsv_CRAFT_ITEM_REPLY(t_PACKET* packet) {
       if ( g_pAVATAR ) {
         CUpgrade& Upgrade = CUpgrade::GetInstance();
         Upgrade.ClearResultItemSet();
-        for ( int i = 0; i < packet->m_gsv_CRAFT_ITEM_REPLY.m_btOutCNT - 1;
+        for ( int i = 0; i < 2 /* packet->m_gsv_CRAFT_ITEM_REPLY.m_btOutCNT */ - 1;
               i++ )
           Upgrade.AddResultItemSet(
             packet->m_gsv_CRAFT_ITEM_REPLY.m_sInvITEM[i] );
 
         Upgrade.SetResultSuccessProb(
           packet->m_gsv_CRAFT_ITEM_REPLY
-                       .m_sInvITEM[packet->m_gsv_CRAFT_ITEM_REPLY.m_btOutCNT - 1]
+                       .m_sInvITEM[2 /* packet->m_gsv_CRAFT_ITEM_REPLY.m_btOutCNT */ - 1]
           .m_ITEM.m_uiQuantity );
         Upgrade.SetResult( packet->m_gsv_CRAFT_ITEM_REPLY.m_btRESULT );
 
@@ -4810,7 +4812,7 @@ void CRecvPACKET::Recv_wsv_CHAR_CHANGE(RoseCommon::Packet::SrvChanCharReply&& pa
   CGame::GetInstance().ChangeState( CGame::GS_EXITMAIN );
 }
 
-void CRecvPACKET::Recv_gsv_LOGOUT_REPLY(t_PACKET* packet) {
+void CRecvPACKET::Recv_gsv_LOGOUT_REPLY(t_PACKET* packet) { //NEED TO BE CHANGED BY T0XIC
   g_itMGR.SetWaitDisconnectTime( packet->m_gsv_LOGOUT_REPLY.m_wWaitSec );
   g_itMGR.ChangeState( IT_MGR::STATE_WAITDISCONNECT );
 }
@@ -4908,9 +4910,10 @@ void        CRecvPACKET::Recv_gsv_SET_HPnMP(t_PACKET* packet) {
 
     if ( packet->m_gsv_SET_HPnMP.m_nMP >= 0 ) {
       ///자기 자신일경우에만 Revise MP(서서히 보정)를 적용한다.
-      if ( client_obj_index == g_pAVATAR->Get_INDEX() )
-        pChar->SetReviseMP( packet->m_gsv_SET_HPnMP.m_nMP -
-                            pChar->Get_MP() );
+        if (client_obj_index == g_pAVATAR->Get_INDEX()) {
+            pChar->SetReviseMP(packet->m_gsv_SET_HPnMP.m_nMP -
+                pChar->Get_MP());
+      }
       else
         pChar->Set_MP( packet->m_gsv_SET_HPnMP.m_nMP );
     }

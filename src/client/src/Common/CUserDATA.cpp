@@ -174,8 +174,9 @@ void  CUserDATA::Cal_BattleAbility() {
 
   /// 현재 소지하고 있는 아이템들의 무게를 계산...
   m_Battle.m_nWEIGHT = 0;
+  LogString(LOG_DEBUG, "The inv max size is %d \r\n", INVENTORY_TOTAL_SIZE);
   for ( short nI     = EQUIP_IDX_FACE_ITEM; nI < INVENTORY_TOTAL_SIZE; nI++ ) {
-    m_Battle.m_nWEIGHT += m_Inventory.GetWEIGHT( nI );
+    m_Battle.m_nWEIGHT += m_Inventory.GetWEIGHT( nI ); // here is the bug it0xic access violation
   }
 
   Cal_DropRATE();
@@ -358,15 +359,13 @@ int   CUserDATA::Cal_MaxHP() {
       default: iA = 4, iM1 = 26, fC = 2.36f;
         break;
     }
-
-    m_Battle.m_nMaxHP = (short)((this->GetCur_LEVEL() + iA) * sqrtf( (float)(this->GetCur_LEVEL() + iM1) ) * fC + (this->GetCur_STR() * 2) + this->m_iAddValue[AT_MAX_HP]);
+    m_Battle.m_nMaxHP = (short)((this->GetCur_LEVEL() + iA) * sqrtf((this->GetCur_LEVEL() + iM1)) * fC + (this->GetCur_STR() * 2) + iA); // +this->m_iAddValue[AT_MAX_HP]); //changed by t0xic
   }
 #ifdef _DEBUG
   int test = this->GetPassiveSkillValue( AT_PSV_MAX_HP );
 #endif
 
-  iA = this->GetPassiveSkillValue( AT_PSV_MAX_HP ) + (short)(m_Battle.m_nMaxHP * this->GetPassiveSkillRate( AT_PSV_MAX_HP ) / 100.f);
-  m_Battle.m_nMaxHP += iA;
+  //iA = this->GetPassiveSkillValue( AT_PSV_MAX_HP ) + (short)(m_Battle.m_nMaxHP * this->GetPassiveSkillRate( AT_PSV_MAX_HP ) / 100.f); //added by t0xic
 
   return m_Battle.m_nMaxHP;
 }
@@ -410,8 +409,8 @@ int     CUserDATA::Cal_MaxMP() {
       break;
   }
 
-  m_Battle.m_nMaxMP = (short)((this->GetCur_LEVEL() + iA) * fM1 + (this->GetCur_INT() * iM2)) + this->m_iAddValue[AT_MAX_MP];
-  iA                = this->GetPassiveSkillValue( AT_PSV_MAX_MP ) + (short)(m_Battle.m_nMaxMP * this->GetPassiveSkillRate( AT_PSV_MAX_MP ) / 100.f);
+  m_Battle.m_nMaxMP = (short)((this->GetCur_LEVEL() + iA) * fM1 + (this->GetCur_INT() * iM2));// +this->m_iAddValue[AT_MAX_MP]; changed by t0xic
+  //iA                = this->GetPassiveSkillValue( AT_PSV_MAX_MP ) + (short)(m_Battle.m_nMaxMP * this->GetPassiveSkillRate( AT_PSV_MAX_MP ) / 100.f); changed by t0xic
   m_Battle.m_nMaxMP += iA;
 
   return m_Battle.m_nMaxMP;

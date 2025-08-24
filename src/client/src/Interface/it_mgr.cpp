@@ -969,9 +969,9 @@ void        IT_MGR::AppendChatMsg(const char* pszMsg, int iType, DWORD forceappl
       pChatDlg->AppendMsg2( pszMsg, dwColor, iFilterType );
       return;
       break;
-    case CHAT_TYPE_SYSTEM: if ( forceapply_color )
+    case CHAT_TYPE_SYSTEM: if (forceapply_color)
         dwColor = forceapply_color;
-      else
+                         else
         dwColor = c_dwChatColorSystem;
 
       iFilterType = CChatDLG::FILTER_SYSTEM;

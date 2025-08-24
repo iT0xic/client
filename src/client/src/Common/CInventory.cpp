@@ -297,7 +297,7 @@ short      CInventory::GetWEIGHT(short nListNO) {
     return ITEM_WEIGHT( pITEM->m_cType, pITEM->m_nItemNo ) * pITEM->GetQuantity();
   }
 
-  return ITEM_WEIGHT( pITEM->m_cType, pITEM->m_nItemNo );
+  return ITEM_WEIGHT( pITEM->m_cType, pITEM->m_nItemNo ); // the ITEM_WEIGHT access violatiob it0xic
 }
 
 //-------------------------------------------------------------------------------------------------

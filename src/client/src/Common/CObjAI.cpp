@@ -824,7 +824,6 @@ bool CObjAI::SetCMD_TOGGLE(BYTE btTYPE) {
   if ( btTYPE >= TOGGLE_TYPE_DRIVE ) {
     btTYPE -= TOGGLE_TYPE_DRIVE;
     this->m_btMoveMODE = btTYPE;
-
     switch ( btTYPE ) {
       case MOVE_MODE_WALK: {
         if ( this->GetPetMode() >= 0 )
@@ -834,11 +833,11 @@ bool CObjAI::SetCMD_TOGGLE(BYTE btTYPE) {
         float fMove    = this->Get_MoveSPEED();
         float fDefault = this->Get_DefaultSPEED();
 
-        LogString(LOG_NORMAL, "WALK : %.3f, %.3f \n", fMove, fDefault);
+        LogString(LOG_DEBUG, "WALK : %.3f, %.3f \n", fMove, fDefault);
 
         if ( !(Get_STATE() == CS_SIT || Get_STATE() == CS_SITTING) ) {
           this->m_bRunMODE = false;
-          this->ToggleRunMODE( fAdjRate ); /// m_bRunMode 세팅후에 호출해야된다.
+          this->ToggleRunMODE( fAdjRate ); /// m_bRunMode
         }
       }
       break;
@@ -850,7 +849,7 @@ bool CObjAI::SetCMD_TOGGLE(BYTE btTYPE) {
         float fMove    = this->Get_MoveSPEED();
         float fDefault = this->Get_DefaultSPEED();
 
-        LogString(LOG_NORMAL, "RUN : %.3f, %.3f \n", fMove, fDefault);
+        LogString(LOG_DEBUG, "RUN : %.3f, %.3f \n", fMove, fDefault);
 
         if ( !(Get_STATE() == CS_SIT || Get_STATE() == CS_SITTING) ) {
           this->m_bRunMODE = true;

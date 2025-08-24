@@ -1450,6 +1450,7 @@ void CSendPACKET::Send_cli_ASSEMBLE_RIDE_ITEM(short nPartIdx, short nInvenIdx) {
   m_pSendPacket->m_HEADER.m_nSize                          = sizeof( cli_ASSEMBLE_RIDE_ITEM );
   m_pSendPacket->m_cli_ASSEMBLE_RIDE_ITEM.m_nRidingInvIDX  = nInvenIdx;
   m_pSendPacket->m_cli_ASSEMBLE_RIDE_ITEM.m_nRidingPartIDX = nPartIdx;
+  LogString(LOG_DEBUG, "invidx is %d and partidx is %d\n", nInvenIdx, nPartIdx); //added by t0xic
   this->Send_PACKET( m_pSendPacket );
 }
 
