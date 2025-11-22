@@ -793,7 +793,6 @@ void        CRecvPACKET::Recv_gsv_SET_MOTION(RoseCommon::Packet::SrvSetAnimation
 void        CRecvPACKET::Recv_gsv_TOGGLE(t_PACKET* packet) {
   CObjCHAR* pCHAR = g_pObjMGR->Get_ClientCharOBJ(
     packet->m_gsv_TOGGLE.m_wObjectIDX, false );
-  LogString(LOG_DEBUG, "MoveType is %d\n", packet->m_gsv_TOGGLE.m_btTYPE); //ADDED BY T0XIC
   if ( pCHAR ) {
     pCHAR->SetCMD_TOGGLE( packet->m_gsv_TOGGLE.m_btTYPE );
 
