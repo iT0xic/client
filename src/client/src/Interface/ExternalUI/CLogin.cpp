@@ -34,8 +34,8 @@ CLogin::CLogin() {
 
   m_pEUIManager = nullptr;
 
-  m_hCopyRight = 0; ///���۱�
-  m_hUserGrade = 0; ///����� ���
+  m_hCopyRight = 0; ///저작권
+  m_hUserGrade = 0; ///사용자 등급
 
 }
 
@@ -216,7 +216,7 @@ void         CLogin::SendLoginReq() {
   g_EUILobby.ShowMsgBox( STR_WAIT_LOGIN, CTMsgBox::BT_CANCEL, true, GetDialogType(), nullptr, pCmd );
 
   if ( CGame::GetInstance().IsActiveRouteComboBox() ) {
-    ///�޺� �ڽ����� ���� ���õ� �������� value�� ���ؿ´�.
+    ///콤보 박스에서 현재 선택된 아이템의 value를 구해온다.
     CWinCtrl* pComponent = Find( IID_COMBOBOX_ROUTE );
     if ( pComponent && pComponent->GetControlType() == CTRL_JCOMBOBOX ) {
       CJComboBox*          pCombo = (CJComboBox*)pComponent;
@@ -263,8 +263,8 @@ void    CLogin::Show() {
   if ( pCtrl && pCtrl->GetControlType() == CTRL_EDITBOX ) {
     pEditBox = (CTEditBox*)pCtrl;
     /*
-     05. 10. 24 - ������
-     ���� ������Ʈ �Ŀ� ��α����ϸ� �α��� â�� �Ƶڶ� ����� �����ִ� �����;; ����.
+     05. 10. 24 - 김주현
+     서버 디스컨넥트 후에 재로그인하면 로그인 창에 아뒤랑 비번이 적혀있는 관계로;; 막음.
   
       pEditBox->SetText( g_GameDATA.m_Account.Get() );
     */
@@ -274,14 +274,14 @@ void    CLogin::Show() {
   if ( pCtrl && pCtrl->GetControlType() == CTRL_EDITBOX ) {
     pEditBox = (CTEditBox*)pCtrl;
     /*
-     05. 10. 24 - ������
-     ���� ������Ʈ �Ŀ� ��α����ϸ� �α��� â�� �Ƶڶ� ����� �����ִ� �����;; ����.
+     05. 10. 24 - 김주현
+     서버 디스컨넥트 후에 재로그인하면 로그인 창에 아뒤랑 비번이 적혀있는 관계로;; 막음.
   
       pEditBox->SetText( g_GameDATA.m_Password.Get() );
     */
   }
 
-  ///���۱�
+  ///저작권
   m_hCopyRight = loadTexture( "3DData\\Control\\Res\\copyright.dds",
                               "3DData\\Control\\Res\\copyright.dds",
                               1,
@@ -454,7 +454,7 @@ bool CLogin::ConnectLoginServer() {
 
   CTCommand* pCmd = new CTCmdExit;
   g_EUILobby.ShowMsgBox( STR_WAIT_CONNECT_LOGIN_SERVER, CTMsgBox::BT_CANCEL, true, EUI_LOGIN, nullptr, pCmd );
-  // ���� ��Ʈ ���� ���� �����ϵ��� ����...
+  // 서버 포트 임의 설정 가능하도록 수정...
   // if ( !g_pNet->ConnectToServer( g_GameDATA.m_ServerIP.Get(), TCP_LSV_PORT, NS_CON_TO_LSV ) )
   if ( !g_pNet->ConnectToServer( g_GameDATA.m_ServerIP.Get(), g_GameDATA.m_wServerPORT, NS_CON_TO_LSV ) ) {
     g_EUILobby.ShowMsgBox( STR_LOGIN_FAIL, CTMsgBox::BT_OK, true, EUI_LOGIN, pCmd, nullptr );
