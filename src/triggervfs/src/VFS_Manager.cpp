@@ -121,7 +121,7 @@ bool      CVFS_Manager::__ReadVEntry(void) {
     } else { return false; }
   }
 
-  return true;
+  return true; // good vfs bp
 }
 
 bool CVFS_Manager::__TestMapIO(const char* szFileName) {

@@ -174,7 +174,6 @@ void  CUserDATA::Cal_BattleAbility() {
 
   /// 현재 소지하고 있는 아이템들의 무게를 계산...
   m_Battle.m_nWEIGHT = 0;
-  LogString(LOG_DEBUG, "The inv max size is %d \r\n", INVENTORY_TOTAL_SIZE);
   for ( short nI     = EQUIP_IDX_FACE_ITEM; nI < INVENTORY_TOTAL_SIZE; nI++ ) {
     m_Battle.m_nWEIGHT += m_Inventory.GetWEIGHT( nI );
   }

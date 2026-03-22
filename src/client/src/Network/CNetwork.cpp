@@ -128,7 +128,6 @@ void              CNetwork::Proc_WorldPacket() {
   std::unique_ptr<t_PACKET> packet(new t_PACKET);
   while (m_WorldSOCKET.Peek_Packet(packet.get(), true)) {
       switch (packet->m_HEADER.m_wType) {
-          //LogString(LOG_DEBUG, "Recv packet type: 0x%x \n", packet->m_HEADER.m_wType); print here added by t0xic
       case to_underlying(ePacketType::PAKSS_ACCEPT_REPLY): {
         switch ( packet->m_NetSTATUS.m_btStatus ) {
           case NETWORK_STATUS_ACCEPTED: {

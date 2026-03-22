@@ -148,6 +148,8 @@ bool CMODEL<CModelPart>::Load(CFileSystem* pFileSystem, t_HASHKEY* pMeshKEY, t_H
   //--------------------------------------------------------------------------------
   /// 각 모델 파트 로드
   //--------------------------------------------------------------------------------
+  LogString(LOG_DEBUG, "the object model count is %d\n", m_nPartCNT);
+  LogString(LOG_DEBUG, "offset is %d\n", pFileSystem->Tell());
   m_pParts       = new CModelPart[ m_nPartCNT ];
   for ( short nP = 0; nP < m_nPartCNT; nP++ ) {
     pFileSystem->ReadInt16( &nListIDX ); // mesh file
@@ -164,7 +166,7 @@ bool CMODEL<CModelPart>::Load(CFileSystem* pFileSystem, t_HASHKEY* pMeshKEY, t_H
 
   if ( m_nRootPART < 0 ) // 설정된 루트가 없으면 0번으로 강제 설정.
     m_nRootPART = 0;
-
+  // need to return to here after object model count loop
   //--------------------------------------------------------------------------------
   /// 포인터 정보 로드
   //--------------------------------------------------------------------------------
@@ -239,7 +241,7 @@ bool CModelDATA<CModelPart>::Load(char* szFileName, short nBoneIdx, short nDummy
     return false;
   }
 
-  m_DataFileName.Set( szFileName );
+  m_DataFileName.Set( szFileName ); //datafile name reader
 
   t_HASHKEY *pMeshKEY = nullptr, *pMatKEY = nullptr, *pEftKEY = nullptr;
 
@@ -338,7 +340,7 @@ bool CModelDATA<CModelPart>::Load(char* szFileName, short nBoneIdx, short nDummy
   /// 실제  Part 타입의 데이터를 할당 하고 로딩..
   pFileSystem->ReadInt16( &m_nModelCNT );
   m_pMODELS = new CMODEL<CModelPart> [ m_nModelCNT ];
-
+  //LogString(LOG_DEBUG, "im in %s", pStr);
   for ( short nM = 0; nM < m_nModelCNT; nM++ ) {
     m_pMODELS[nM].Load( pFileSystem, pMeshKEY, pMatKEY, pEftKEY, m_nDefaultLinkBoneNo, m_nDefaultLinkDummyNo );
   }
