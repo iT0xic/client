@@ -294,7 +294,7 @@ void    CLogin::Show() {
   if ( m_hCopyRight )
     getTextureSize( m_hCopyRight, iTempWidth, m_iHeightCopyRight );
 
-  ///����� ���
+  ///사용자 등급
   if ( CCountry::GetSingleton().IsKorea() ) {
     m_hUserGrade = loadTexture( "3DData\\Control\\Res\\user12.dds",
                                 "3DData\\Control\\Res\\user12.dds",
