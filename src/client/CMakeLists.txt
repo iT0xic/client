@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.11 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
 
 set(PROJECT TRose)
 project(${PROJECT})
@@ -27,6 +27,10 @@ link_directories(
 add_linker_flags("/SAFESEH:NO")
 add_linker_flags("/SUBSYSTEM:WINDOWS")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DZZ_LUA500")
+
+if (DISABLE_CRYPT)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DDISABLE_CRYPT")
+endif ()
 
 set(args
   TARGET TRose_GM
@@ -827,7 +831,7 @@ set( RESOURCE_FILES
 
 set_source_files_properties(${RESOURCE_FILES} PROPERTIES LANGUAGE RC)
 add_executable(${PROJECT} src/stdafx.cpp ${SOURCES_HEADER} ${SOURCES_MAIN} ${SOURCES_COMMON} ${GEN_HEADERS} ${RESOURCE_FILES})
-set_target_properties(${PROJECT} PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT "src/stdafx.h")
+target_precompile_headers(${PROJECT} PRIVATE "src/stdafx.h")
 set_target_properties(${PROJECT} PROPERTIES OUTPUT_NAME_DEBUG "TRose_d")
 set_target_properties(${PROJECT} PROPERTIES WIN32_EXECUTABLE true)
 
